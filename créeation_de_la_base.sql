@@ -1,1 +1,1 @@
-SELECT DISTINCT idEtu aaaaaaaaaaaaaa
+SELECT DISTINCT idEtu 
