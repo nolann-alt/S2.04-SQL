@@ -19,7 +19,8 @@ CREATE TABLE Quartier (
     nomQuartier VARCHAR(50),
     longueurPiste FLOAT,
     CONSTRAINT pk_Quartier PRIMARY KEY (Quartier),
-    CONSTRAINT fk_compteurQuartier FOREIGN KEY (id) REFERENCES Compteur(numero)
+    CONSTRAINT fk_compteurQuartier FOREIGN KEY (id) REFERENCES Compteur(numero),
+    CONSTRAINT ck_longueurPiste CHECK (longueurPiste >= 0)
 );
 
 CREATE TABLE Date (
@@ -27,7 +28,8 @@ CREATE TABLE Date (
     jour INT NOT NULL,
     tempMoy FLOAT,
     vacances VARCHAR(50),
-    CONSTRAINT pk_date PRIMARY KEY (date)
+    CONSTRAINT pk_date PRIMARY KEY (date),
+    CONSTRAINT ck_jour CHECK (jour BETWEEN 1 AND 7)
 );
 
 CREATE TABLE Comptage (
@@ -37,7 +39,8 @@ CREATE TABLE Comptage (
     probaAnomalie VARCHAR(10),
     CONSTRAINT pk_Comptage PRIMARY KEY (numCompteur, laDate),
     CONSTRAINT fk_Comptage_Compteur FOREIGN KEY (numCompteur) REFERENCES Compteur(numero),
-    CONSTRAINT fk_Comptage_Date FOREIGN KEY (laDate) REFERENCES Date(date)
+    CONSTRAINT fk_Comptage_Date FOREIGN KEY (laDate) REFERENCES Date(date),
+    CONSTRAINT ck_nbVelo CHECK (nbVelo >= 0)
 );
 
 /* CT
