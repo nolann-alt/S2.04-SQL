@@ -1,52 +1,56 @@
-/*
-Compteur(Numero(1), Libelle)
-Quartier(Identifiant(1), Nom)
-QuartierCompteur(idCompteur = @Compteur.Numero, idQuartier = @Quartier.Identifiant)
-ComptageVelo(num_compteur = @Compteur.Numero, date, nombre_velos, probabilite_anomalie, jour_semaine, vacances)
-LongueurPistesVelo(codeQuartier = @Quartier.Identifiant(1), amenagement_cyclable)
-Temperature(date(1), temperature_moyenne)
+
+/* SCHEMA RELATIONNEL
+
+Compteur(numero (1), libelle, leQuartier = @Quartier.id)
+Quartier(id (1), nomQuartier (2), longueurPiste)
+Date(date (1), jour (NN), tempMoy, vacances)
+Comptage([numCompteur = @Compteur.numero, laDate = @Date.date](1), nbVelo, probaAnomalie)
 */
 
+
 CREATE TABLE Compteur (
-    Numero VARCHAR2(50),
-    Libelle VARCHAR2(255),
-    CONSTRAINT pk_Compteur PRIMARY KEY (Numero)
+    numero INT,
+    libelle VARCHAR(50),
+    CONSTRAINT pk_Compteur PRIMARY KEY (Compteur)
 );
 
 CREATE TABLE Quartier (
-    Identifiant VARCHAR2(50),
-    Nom VARCHAR2(255),
-    CONSTRAINT pk_Quartier PRIMARY KEY (Identifiant)
+    id INT,
+    nomQuartier VARCHAR(50),
+    longueurPiste FLOAT,
+    CONSTRAINT pk_Quartier PRIMARY KEY (Quartier),
+    CONSTRAINT fk_compteurQuartier FOREIGN KEY (id) REFERENCES Compteur(numero)
 );
 
-CREATE TABLE QuartierCompteur (
-    idCompteur VARCHAR2(50),
-    idQuartier VARCHAR2(50),
-    CONSTRAINT pk_QuartierCompteur PRIMARY KEY (idCompteur, idQuartier),
-    CONSTRAINT fk_QC_Compteur FOREIGN KEY (idCompteur) REFERENCES Compteur(Numero),
-    CONSTRAINT fk_QC_Quartier FOREIGN KEY (idQuartier) REFERENCES Quartier(Identifiant)
-);
-
-CREATE TABLE ComptageVelo (
-    num_compteur VARCHAR2(50),
+CREATE TABLE Date (
     date DATE,
-    nombre_velos INT,
-    probabilite_anomalie FLOAT,
-    jour_semaine VARCHAR2(50),
-    vacances VARCHAR2(50),
-    CONSTRAINT pk_ComptageVelo PRIMARY KEY (num_compteur, date),
-    CONSTRAINT fk_CV_Compteur FOREIGN KEY (num_compteur) REFERENCES Compteur(Numero)
+    jour INT NOT NULL,
+    tempMoy FLOAT,
+    vacances VARCHAR(50),
+    CONSTRAINT pk_date PRIMARY KEY (date)
 );
 
-CREATE TABLE LongueurPistesVelo (
-    codeQuartier VARCHAR2(50),
-    amenagement_cyclable FLOAT,
-    CONSTRAINT pk_LPV PRIMARY KEY (codeQuartier),
-    CONSTRAINT fk_LPV_Quartier FOREIGN KEY (codeQuartier) REFERENCES Quartier(Identifiant)
+CREATE TABLE Comptage (
+    numCompteur INT,
+    laDate DATE,
+    nbVelo INT,
+    probaAnomalie VARCHAR(10),
+    CONSTRAINT pk_Comptage PRIMARY KEY (numCompteur, laDate),
+    CONSTRAINT fk_Comptage_Compteur FOREIGN KEY (numCompteur) REFERENCES Compteur(numero),
+    CONSTRAINT fk_Comptage_Date FOREIGN KEY (laDate) REFERENCES Date(date)
 );
 
-CREATE TABLE Temperature (
-    date DATE,
-    temperature_moyenne FLOAT,
-    CONSTRAINT pk_Temperature PRIMARY KEY (date)
-);
+/* CT
+Les attributs numero, id, numCompteur, nbVelo, jour sont de type INTEGER.
+Les attributs date et laDate sont de type DATE.
+Les attributs longueurPiste et tempMoy sont de type FLOAT.
+Les autres attributs sont de type VARCHAR.
+Quartier : 
+L'attribut longueurPiste doit être positif.
+
+Comptage : 
+Le nombre de velo doit être positif.
+
+Date : 
+Le jour de la semaine doit être compris entre 1 et 7.
+*/
