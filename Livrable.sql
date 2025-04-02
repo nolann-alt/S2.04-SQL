@@ -72,10 +72,10 @@ WHERE EXISTS (
 
 
 -- Question 8 : Quels quartiers n'ont aucun compteur ayant enregistré de données ?
-SELEct leQuartier
+SELECT leQuartier
 FROM Compteur
 WHERE NOT EXISTS (
-    SELECT num_compteur
+    SELECT *
     FROM Comptage
     WHERE numCompteur = numero
 );
