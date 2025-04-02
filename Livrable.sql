@@ -12,7 +12,7 @@ Comptage([numCompteur = @Compteur.numero, laDate = @Date.date](1), nbVelo, proba
 ---------------------------------------------------
 */
 
---Requête 1 : Quels sont les compteurs (numéro et libellé) situés dans le quartier "Centre-ville" ?
+-- Question 1 : Quels sont les compteurs (numéro et libellé) situés dans le quartier "Centre-ville" ?
 SELECT DISTINCT numero, libelle
 FROM Compteur
     JOIN Quartier ON leQuartier = id
@@ -32,44 +32,46 @@ FROM Compteur
     LEFT JOIN Quartier ON leQuartier = id;
 
 
--- Question 4 : Afficher tous les quartiers et les compteurs associés, éventuellement rien.
-SELECT Identifiant, nom, Libelle
-FROM Quartier
+-- Question 4 : Lister toutes les dates avec les comptages, y compris les dates où aucun comptage n'a été effectué.
+SELECT date, laDate
+FROM Date
+    LEFT JOIN Comptage ON laDate = date;
     
 
 
--- Question 5 : Afficher les compteurs actifs uniquement pendant les vacances. (Sous-requête avec NOT IN)
-SELECT DISTINCT num_compteur
-FROM ComptageVelo
-WHERE num_compteur NOT IN (SELECT DISTINCT num_compteur
-                           FROM ComptageVelo
-                           WHERE vacances != 'oui'
-                          )
-;
+-- Question 5 : Quels compteurs n'ont jamais enregistré de comptage avec une anomalie (probaAnomalie > 0) ?
+SELECT DISTINCT numCompteur
+FROM Comptage
+WHERE numCompteur NOT IN (SELECT DISTINCT numCompteur
+                           FROM Comptage
+                           WHERE UPPER(probaAnomalie) = 'FORTE'
+                          );
 
 
--- Question 6 : Afficher les compteurs utilisés à la fois en vacances et hors vacances. (Sous-requête avec IN)
-SELECT DISTINCT num_compteur
-FROM ComptageVelo
-WHERE vacances = 'oui'
-AND num_compteur IN (SELECT num_compteur
+-- Question 6 : Quels quartiers ont des compteurs qui ont enregistré plus de 100 vélos un jour de vacances ?
+SELECT DISTINCT numCompteur
+FROM Comptage, Date
+WHERE laDate = date
+AND nbVelo > 
+AND UPPER(vacances) != 'HORS VACANCES'
+AND numCompteur IN (SELECT num_compteur
                      FROM ComptageVelo
                      WHERE vacances != 'oui'
                     )
 ;
 
 
--- Questi 7 : Afficher les identifiants des quartiers pour lesquels il existe au moins un Compteur associé dans QuartierCompteur. (Sous-requête avec EXISTS)
-SELECT Identifiant
-FROM Quartier
-WHERE EXISTS (
-    SELECT idCompteur
-    FROM QuartierCompteur
-    WHERE idQuartier = Identifiant
-);
+-- Question 7 : Quelles dates ont au moins un comptage avec une probabilité d'anomalie supérieure à 50% ?
+SELECT DISTINCT date
+FROM Date
+WHERE NOT EXISTS (
+    SELECT numCompteur
+    FROM Commpteur
+    
+)
 
 
--- Question 8 : Afficher les noms des compteurs pour lesquels aucun enregistrement dans ComptageVelo ne dépasse 0.5 de probabilité d’anomalie (Sous-requête avec NOT EXISTS)
+-- Question 8 : Quels quartiers n'ont aucun compteur ayant enregistré de données ?
 SELECT Libelle
 FROM Compteur
 WHERE NOT EXISTS (
@@ -79,20 +81,20 @@ WHERE NOT EXISTS (
     AND probabilite_anomalie > 0.5
 );
 
--- Question 9 : Afficher le nombre total d’enregistrements dans ComptageVelo (Fonction de groupe sans regroupement)
+-- Question 9 : Quel est le nombre total de vélos comptés sur l'ensemble des comptages ?
 SELECT COUNT(*) AS total_lignes
 FROM ComptageVelo;
 
--- Question 10 : Afficher la moyenne globale du nombre de vélos enregistrés (Fonction de groupe sans regroupement)
+-- Question 10 : Quelle est la température moyenne la plus élevée enregistrée parmi toutes les dates ?
 SELECT AVG(nombre_velos) AS moyenne_globale
 FROM ComptageVelo;
 
--- Question 11 : Afficher la moyenne de vélos enregistrés par jour de la semaine (Regroupement avec fonction de groupe)
+-- Question 11 : Quel est le nombre moyen de vélos comptés par quartier ?
 SELECT jour_semaine, AVG(nombre_velos) AS moyenne
 FROM ComptageVelo
 GROUP BY jour_semaine;
 
--- Question 12 : Afficher le nombre d'enregistrements pour chaque compteur (Regroupement avec fonction de groupe)
+-- Question 12 : Combien de comptages ont été effectués pour chaque jour de la semaine ?
 SELECT num_compteur, COUNT(*) AS nb_enregistrements
 FROM ComptageVelo
 GROUP BY num_compteur;
