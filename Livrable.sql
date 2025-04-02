@@ -72,13 +72,12 @@ WHERE EXISTS (
 
 
 -- Question 8 : Quels quartiers n'ont aucun compteur ayant enregistré de données ?
-SELECT Libelle
+SELEct leQuartier
 FROM Compteur
 WHERE NOT EXISTS (
     SELECT num_compteur
-    FROM ComptageVelo
-    WHERE num_compteur = Numero
-    AND probabilite_anomalie > 0.5
+    FROM Comptage
+    WHERE numCompteur = numero
 );
 
 -- Question 9 : Quel est le nombre total de vélos comptés sur l'ensemble des comptages ?
