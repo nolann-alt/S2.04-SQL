@@ -51,24 +51,24 @@ WHERE numCompteur NOT IN (SELECT DISTINCT numCompteur
 -- Question 6 : Quels quartiers ont des compteurs qui ont enregistré plus de 100 vélos un jour de vacances ?
 SELECT DISTINCT numCompteur
 FROM Comptage, Date
-WHERE laDate = date
-AND nbVelo > 
-AND UPPER(vacances) != 'HORS VACANCES'
-AND numCompteur IN (SELECT num_compteur
-                     FROM ComptageVelo
-                     WHERE vacances != 'oui'
+AND nbVelo > 100
+AND numCompteur IN (SELECT numCompteur
+                     FROM Comptage, Date
+                     WHERE laDate = date
+                     AND UPPER(vacances) != 'HORS VACANCES'
                     )
 ;
 
 
--- Question 7 : Quelles dates ont au moins un comptage avec une probabilité d'anomalie supérieure à 50% ?
+-- Question 7 : Quelles dates ont au moins un comptage avec une probabilité d'anomalie ?
 SELECT DISTINCT date
 FROM Date
-WHERE NOT EXISTS (
+WHERE EXISTS (
     SELECT numCompteur
     FROM Commpteur
-    
-)
+    WHERE laDate = date
+    AND UPPER(probaAnomalie) = 'FORTE'
+);
 
 
 -- Question 8 : Quels quartiers n'ont aucun compteur ayant enregistré de données ?
