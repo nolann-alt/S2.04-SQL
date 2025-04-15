@@ -1,10 +1,19 @@
+/*
+Script de création de la base SQL - SAE S2.04
+Prénom : Nolann / Matthieu / Arthur / Marin
+Nom : LESCOP / GOUELO / JAN / WEIS
+Groupe : 1D1
 
+---------------------------------------------------
 /* SCHEMA RELATIONNEL
 
-Compteur(numero (1), libelle, leQuartier = @Quartier.id)
 Quartier(id (1), nomQuartier, longueurPiste)
+Compteur(numero (1), libelle, leQuartier = @Quartier.id)
 Date(date (1), jour (NN), tempMoy, vacances)
 Comptage([numCompteur = @Compteur.numero, laDate = @Date.date](1), nbVelo, probaAnomalie)
+
+*/
+---------------------------------------------------
 */
 
 SET SQL_SAFE_UPDATES = 0;
@@ -50,18 +59,3 @@ CREATE TABLE Comptage (
     CONSTRAINT fk_Comptage_Date FOREIGN KEY (laDate) REFERENCES Date(date),
     CONSTRAINT ck_nbVelo CHECK (nbVelo >= 0)
 );
-
-/* CT
-Les attributs numero, id, numCompteur, nbVelo, jour sont de type INTEGER.
-Les attributs date et laDate sont de type DATE.
-Les attributs longueurPiste et tempMoy sont de type FLOAT.
-Les autres attributs sont de type VARCHAR.
-Quartier : 
-L'attribut longueurPiste doit être positif.
-
-Comptage : 
-Le nombre de velo doit être positif.
-
-Date : 
-Le jour de la semaine doit être compris entre 1 et 7.
-*/
