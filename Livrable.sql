@@ -157,6 +157,7 @@ FROM Comptage;
 '39448940'
 */
 
+
 -- Requête 10 : Quelle est la température moyenne la plus élevée enregistrée parmi toutes les dates ? (Fonction de groupe sans regroupement)
 SELECT MAX(tempMoy) AS tempMax
 FROM Date;
