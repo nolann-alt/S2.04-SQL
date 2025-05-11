@@ -39,7 +39,6 @@ CREATE TABLE Compteur (
     CONSTRAINT fk_Compteur_Quartier FOREIGN KEY (leQuartier) REFERENCES Quartier(id)
 );
 
-
 CREATE TABLE Date (
     date DATE,
     jour INT NOT NULL,

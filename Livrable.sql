@@ -293,7 +293,6 @@ SELECT * FROM ComptagesAnormaux;
 
 
 -- Requête 18 : Créer une vue "QuartiersSansDonnees" montrant les quartiers sans aucun comptage enregistré.
-
 CREATE OR REPLACE VIEW vue_QuartiersSansDonnes AS
 SELECT DISTINCT id, UPPER(nomQuartiers)
 FROM Quartier
